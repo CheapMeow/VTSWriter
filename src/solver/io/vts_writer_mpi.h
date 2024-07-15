@@ -14,8 +14,7 @@ private:
     int local_extent[6];
     int mpi_rank = 0, mpi_size = 1;
 
-    vtkSmartPointer<vtkMPIController>      contr;
-    vtkSmartPointer<vtkProgrammableFilter> programmable_filter;
+    vtkSmartPointer<vtkMPIController> contr;
 
     struct Args
     {
@@ -33,6 +32,13 @@ public:
 
         MPI_Comm_size(MPI_COMM_WORLD, &mpi_size);
         MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
+
+        global_extent[0] = 0;
+        global_extent[1] = mpi_size * Nx;
+        global_extent[2] = 0;
+        global_extent[3] = Ny;
+        global_extent[4] = 0;
+        global_extent[5] = Nz;
 
         local_extent[0] = mpi_rank * Nx;
         local_extent[1] = (mpi_rank + 1) * Nx;

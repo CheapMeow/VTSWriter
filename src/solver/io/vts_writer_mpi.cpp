@@ -3,7 +3,7 @@
 void VTSWriterMPI::write_to_file(const std::string& filename)
 {
     // Create a vtkProgrammableFilter
-    programmable_filter = vtkSmartPointer<vtkProgrammableFilter>::New();
+    vtkSmartPointer<vtkProgrammableFilter> programmable_filter = vtkSmartPointer<vtkProgrammableFilter>::New();
 
     // Initialize an instance of Args
     Args args;
@@ -23,7 +23,7 @@ void VTSWriterMPI::write_to_file(const std::string& filename)
             output->SetExtent(args->local_extent);
         },
         &args);
-        
+
     programmable_filter->SetInputData(vtk_structured_grid);
 
     vtk_structured_grid->SetExtent(global_extent);
