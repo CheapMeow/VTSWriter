@@ -41,28 +41,6 @@ public:
         local_extent[4] = 0;
         local_extent[5] = Nz;
 
-        // Create a vtkProgrammableFilter
-        programmable_filter = vtkSmartPointer<vtkProgrammableFilter>::New();
-
-        // Initialize an instance of Args
-        Args args;
-        args.programmable_filter = programmable_filter;
-        for (int i = 0; i < 6; ++i)
-            args.local_extent[i] = local_extent[i];
-
-        programmable_filter->SetExecuteMethod(
-            [](void* arg) {
-                Args*              args       = reinterpret_cast<Args*>(arg);
-                auto               info       = args->programmable_filter->GetOutputInformation(0);
-                auto               output_tmp = args->programmable_filter->GetOutput();
-                auto               input_tmp  = args->programmable_filter->GetInput();
-                vtkStructuredGrid* output     = dynamic_cast<vtkStructuredGrid*>(output_tmp);
-                vtkStructuredGrid* input      = dynamic_cast<vtkStructuredGrid*>(input_tmp);
-                output->ShallowCopy(input);
-                output->SetExtent(args->local_extent);
-            },
-            &args);
-
         populate_to_position(Nx, Ny, Nz, h, mpi_rank * Nx * h);
     }
 
@@ -71,8 +49,6 @@ public:
         delete[] position_x;
         delete[] position_y;
         delete[] position_z;
-
-        contr->Finalize();
     }
 
 protected:
