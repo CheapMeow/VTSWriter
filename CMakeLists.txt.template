@@ -1,0 +1,54 @@
+cmake_minimum_required(VERSION 3.10)
+project(MyProject)
+
+# 设置编译选项
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -lm -DDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "-g -O3 -lm -DRELEASE")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g -O3 -lm -DRELWITHDEBINFO")
+
+# set output
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/$<CONFIG>)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/$<CONFIG>)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/$<CONFIG>)
+
+# find 3rdparty
+find_package(MPI REQUIRED)
+find_package(VTK COMPONENTS 
+  CommonCore
+  CommonMisc
+  CommonDataModel
+  IOXML
+  IOParallelXML
+  ParallelMPI
+  FiltersProgrammable
+)
+if (NOT VTK_FOUND)
+  message(FATAL_ERROR "Solver: Unable to find the VTK build folder.")
+endif()
+
+# ================ Solver ================
+
+add_library(Solver STATIC
+# SOLVER_SOURCES_PLACEHOLDER
+)
+
+target_include_directories(Solver PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/solver
+    ${MPI_CXX_INCLUDE_DIRS})
+target_link_libraries(Solver PUBLIC
+    MPI::MPI_CXX
+    ${VTK_LIBRARIES})
+
+# vtk_module_autoinit is needed
+vtk_module_autoinit(
+  TARGETS VTSWriter
+  MODULES ${VTK_LIBRARIES}
+)
+
+# ================ EXE ================
+
+# Manual Tests
+# MANUAL_TESTS_PLACEHOLDER
