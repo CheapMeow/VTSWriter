@@ -23,7 +23,7 @@ void VTSWriterMPI::write_to_file(const std::string& filename)
             output->SetExtent(args->local_extent);
         },
         &args);
-
+        
     programmable_filter->SetInputData(vtk_structured_grid);
 
     vtk_structured_grid->SetExtent(global_extent);
@@ -42,9 +42,7 @@ void VTSWriterMPI::write_to_file(const std::string& filename)
     parallel_writer->SetNumberOfPieces(mpi_size);
     parallel_writer->SetStartPiece(mpi_rank);
     parallel_writer->SetEndPiece(mpi_rank);
-    parallel_writer->SetDataModeToAppended();
-    parallel_writer->SetCompressorTypeToNone();
-    parallel_writer->EncodeAppendedDataOff();
+    parallel_writer->SetDataModeToBinary();
     parallel_writer->Update();
     parallel_writer->Write();
 

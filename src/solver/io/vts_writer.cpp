@@ -113,9 +113,7 @@ void VTSWriter::write_to_file(const std::string& filename)
     std::cout << "Writing vts: " << filename + ".vts" << std::endl;
 
     vtkSmartPointer<vtkXMLStructuredGridWriter> writer = vtkSmartPointer<vtkXMLStructuredGridWriter>::New();
-    writer->SetDataModeToAppended();
-    writer->SetCompressorTypeToNone();
-    writer->EncodeAppendedDataOff();
+    writer->SetDataModeToBinary();
     writer->SetFileName((filename + ".vts").c_str());
     writer->SetInputData(vtk_structured_grid);
     writer->Write();
