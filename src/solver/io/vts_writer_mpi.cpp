@@ -23,14 +23,14 @@ void VTSWriterMPI::write_to_file(const std::string& filename)
             output->SetExtent(args->local_extent);
         },
         &args);
-        
+
     programmable_filter->SetInputData(vtk_structured_grid);
 
     vtk_structured_grid->SetExtent(global_extent);
     vtk_structured_grid->SetPoints(points);
 
-    vtk_structured_grid->GetPointData()->AddArray(velocity);
-    vtk_structured_grid->GetPointData()->AddArray(pressure);
+    vtk_structured_grid->GetCellData()->AddArray(velocity);
+    vtk_structured_grid->GetCellData()->AddArray(pressure);
 
     std::cout << "Writing vts: " << filename + ".vts" << std::endl;
 

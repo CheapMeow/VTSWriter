@@ -20,33 +20,33 @@ void VTSWriter::populate_to_position(int    Nx,
     assert(Nz > 0);
     assert(h > 0.0);
 
-    position_x = new double[Nx];
-    position_y = new double[Ny];
-    position_z = new double[Nz];
+    position_x = new double[Nx + 1];
+    position_y = new double[Ny + 1];
+    position_z = new double[Nz + 1];
 
-    for (int i = 0; i < Nx; i++)
+    for (int i = 0; i < Nx + 1; i++)
     {
-        position_x[i] = offset_x + i * h + 0.5 * h;
+        position_x[i] = offset_x + i * h;
     }
 
-    for (int j = 0; j < Ny; j++)
+    for (int j = 0; j < Ny + 1; j++)
     {
-        position_y[j] = offset_y + j * h + 0.5 * h;
+        position_y[j] = offset_y + j * h;
     }
 
-    for (int k = 0; k < Nz; k++)
+    for (int k = 0; k < Nz + 1; k++)
     {
-        position_z[k] = offset_z + k * h + 0.5 * h;
+        position_z[k] = offset_z + k * h;
     }
 
     points = vtkSmartPointer<vtkPoints>::New();
-
+    points->Allocate((Nx + 1) * (Ny + 1) * (Nz + 1));
     // Paraview need Fortran order
-    for (int k = 0; k < Nz; k++)
+    for (int k = 0; k < Nz + 1; k++)
     {
-        for (int j = 0; j < Ny; j++)
+        for (int j = 0; j < Ny + 1; j++)
         {
-            for (int i = 0; i < Nx; i++)
+            for (int i = 0; i < Nx + 1; i++)
             {
                 double x = position_x[i];
                 double y = position_y[j];
@@ -107,8 +107,8 @@ void VTSWriter::write_to_file(const std::string& filename)
     vtk_structured_grid->SetExtent(global_extent);
     vtk_structured_grid->SetPoints(points);
 
-    vtk_structured_grid->GetPointData()->AddArray(velocity);
-    vtk_structured_grid->GetPointData()->AddArray(pressure);
+    vtk_structured_grid->GetCellData()->AddArray(velocity);
+    vtk_structured_grid->GetCellData()->AddArray(pressure);
 
     std::cout << "Writing vts: " << filename + ".vts" << std::endl;
 

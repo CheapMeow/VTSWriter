@@ -4,10 +4,10 @@
 
 #include <cassert>
 
+#include <vtkCellData.h>
 #include <vtkDoubleArray.h>
 #include <vtkErrorCode.h>
 #include <vtkFloatArray.h>
-#include <vtkPointData.h>
 #include <vtkPoints.h>
 #include <vtkSmartPointer.h>
 #include <vtkStructuredGrid.h>
@@ -31,11 +31,11 @@ public:
     VTSWriter(int Nx, int Ny, int Nz, double h)
     {
         global_extent[0] = 0;
-        global_extent[1] = Nx - 1;
+        global_extent[1] = Nx;
         global_extent[2] = 0;
-        global_extent[3] = Ny - 1;
+        global_extent[3] = Ny;
         global_extent[4] = 0;
-        global_extent[5] = Nz - 1;
+        global_extent[5] = Nz;
         populate_to_position(Nx, Ny, Nz, h);
     }
 
